@@ -1,5 +1,8 @@
 #include <map>
 #include <cstdio>
+#include <algorithm>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
@@ -42,7 +45,7 @@ public:
     fscanf(file, "%s", new char[20]);
   }
 
-  tuple* nextTuple(){
+  inline virtual tuple* nextTuple(){
     int u, i;
     char date[15];
     while (fscanf(file, "%d,%d,%s", &u, &i, date) == EOF){
@@ -67,6 +70,46 @@ public:
     int iid = i-1;
     int t = epoch;
     return new tuple(uid, iid, t);
+  }
+
+};
+
+
+class NetflixReaderRAM: NetflixReader{
+  int dataSize, ptr;
+  tuple** data;
+public:
+  NetflixReaderRAM(int _movies, int _dataSize): NetflixReader(_movies){
+    srand(time(0));
+    dataSize = _dataSize;
+
+    data = new tuple*[dataSize];
+    for (int i=0 ; i<dataSize ; i++){
+      tuple* cur = NetflixReader::nextTuple();
+      if (cur == NULL){
+        fprintf(stderr, "ERR: There are not %d datapoints in the set.\n", dataSize);
+      }
+      data[i] = cur;
+    }
+    printf("ALL FILES READ\n");
+    ptr = 0;
+    random_shuffle(data, data+dataSize);
+    printf("RANDOM SHUFFLED\n");
+  }
+
+  inline tuple* nextTuple(){
+    if (ptr == dataSize)
+      return NULL;
+    else
+      return data[ptr++];
+  }
+
+  inline void reset(){
+    ptr = 0;
+  }
+
+  inline void shuffle(){
+    random_shuffle(data, data+dataSize);
   }
 
 };

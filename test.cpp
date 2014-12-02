@@ -5,12 +5,15 @@
 using namespace std;
 
 int main(){
-  NetflixReader *nr = new NetflixReader(MOVIES_TOTAL);
+  int start = time(0);
+  NetflixReaderRAM *nr = new NetflixReaderRAM(MOVIES_TOTAL, DATASET_SIZE);
   tuple *cur;
 
-  int start = time(0);
-  while((cur = nr->nextTuple()) != NULL);
+  int middle = time(0);
+  while((cur = nr->nextTuple()) != NULL)
+    cur->uid++;
   int end = time(0);
 
-  cout << "READING ALL FILES TOOK " << (end - start) << " SECONDS." << endl;
+  cout << "READING ALL FILES TOOK " << (middle - start) << " SECONDS." << endl;
+  cout << "ITERATION ON DATAPOINTS TOOK " << (end - middle) << " SECONDS." << endl;
 }
