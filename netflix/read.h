@@ -42,6 +42,7 @@ class NetflixReader{
 
 public:
   NetflixReader(int _movies){
+    cnt = 0;
     movies = _movies;
     cur_movie = 1;
     file = fopen(getCurrentFile(), "r");

@@ -8,7 +8,7 @@
 #include <vector>
 #include <cstring>
 
-using namespace std ;
+using namespace std;
 
 
 class Vector
@@ -36,7 +36,7 @@ public:
 
   inline double & operator [](int i)
   {
-    if (i>= n){
+    if (i >= n || i < 0){
       cerr << "Limit Exceeded" << endl;
 
       return *new double(-1);
@@ -60,7 +60,7 @@ public:
     copy ( input.a , input.a+n , a);
   }
 
-  inline Vector operator +(const Vector& v2)const
+  inline Vector operator + (const Vector& v2) const
   {
     if(v2.n != n)
     {
@@ -73,6 +73,7 @@ public:
     return result ;
 
   }
+
   inline Vector operator *(const int c)const
   {
     Vector result(n) ;
@@ -108,7 +109,7 @@ public:
     {
       a[i] -=  v2.a[i] ;
     }
-    }
+  }
 
   // void save (string filename)
   // {

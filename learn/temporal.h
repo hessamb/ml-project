@@ -58,20 +58,21 @@ public:
 
 TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lambda,
   int users, int items, int nstep, TemporalDynamicsParams *params = NULL){
-  
+
   if (params == NULL){
     params = new TemporalDynamicsParams(users, items, TEMPORAL_RANK);
   }
-  cout << nstep << endl;
 
   int *rates = new int[users];
   memset(rates, 0, users*sizeof(int));
   tuple *cur;
+
   while( (cur = nr->nextTuple()) != NULL ){
     params->t_u[ cur->uid ] += cur->t;
     rates[ cur->uid ]++;
   }
 
+  cout << nstep << endl;
   for (int u = 0 ; u<users ; u++){
     if (rates[u] == 0)
       params->t_u[u] = 0;
@@ -79,7 +80,9 @@ TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lam
       params->t_u[u] /= rates[u];
   }
 
+  cout << nstep << endl;
   while(nstep--){
+    cout << nstep << endl;
     tuple *cur;
     while( (cur = nr->nextTuple()) != NULL ){
       params->update(cur->uid, cur->iid, cur->r, cur->t, eta, lambda);
