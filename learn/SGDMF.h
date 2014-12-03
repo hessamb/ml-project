@@ -5,6 +5,7 @@
 #include "../Models/linalg.h"
 #include "../read/interface.h"
 #include "../conf.h"
+#include <ctime>
 
 using namespace std ;
 
@@ -51,11 +52,14 @@ public :
   }
 
   void Learn (ReadInterface* buff)
-  {
+  {	
+	int ptime = time(0) ;
     for (int step = 0 ; step<NSTEP ; step++)
     {
       cout << "iteration :" << step << endl ;
-      tuple* rating ;
+      cout << "time : " << time(0) -ptime << endl ;
+	ptime = time(0) ;
+	tuple* rating ;
       while(( rating = buff->nextTuple() ) != NULL)
       {
 		int f =  P.n ;
