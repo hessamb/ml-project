@@ -2,6 +2,7 @@
 #define __LINALG__
 
 #include <iostream>
+#include <stdio.h>
 #include <cmath>
 #include <algorithm>
 #include <vector>
@@ -94,6 +95,30 @@ public:
     }
     return sum ;
   }
+  
+	inline void operator -= (const Vector& v2)const
+	{	
+		if(v2.n != n)
+		{
+			cerr << "dimention mismatch" << endl ;
+			return  ;
+		}
+		
+		for (int i=0 ; i<n ; i++)
+		{
+			a[i] -=  v2.a[i] ;
+		}
+    }
+	
+	void save (string filename)
+	{
+		File * pFile ;
+		pFile = fopen (filename.c_str(),"w+");
+		fprintf (pFile, "%d \n " , n);
+		for (int i=0 ; i<n ; i++)
+			fprintf (pFile, "%lf " , a[i]);
+		fclose (pFile);
+	}
 
 };
 
@@ -127,6 +152,36 @@ public:
     else
       return a[i] ;
   }
+  
+  void save (string filename)
+	{
+		File * pFile ;
+		pFile = fopen (filename.c_str(),"w+");
+		fprintf (pFile, "%d %d \n " , m , n);
+		for (int i=0 ; i<m ; i++)
+		{
+			for(int j=0 ; j<n ; j++ )
+				fprintf (pFile, "%lf " , a[i][j]);
+			fprintf (pFile,"\n") ;
+		}
+		
+		fclose (pFile);
+	}
+	void load (string filename)
+	{
+		File * pFile ;
+		pFile = fopen (filename.c_str(),"w+");
+		fprintf (pFile, "%d %d \n " , m , n);
+		for (int i=0 ; i<m ; i++)
+		{
+			for(int j=0 ; j<n ; j++ )
+				fprintf (pFile, "%lf " , a[i][j]);
+			fprintf (pFile,"\n") ;
+		}
+		
+		fclose (pFile);
+	
+	}
 };
 
 #endif
