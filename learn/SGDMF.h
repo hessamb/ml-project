@@ -52,6 +52,31 @@ public :
     }
 
   }
+  void save(string foldername)
+  {
+    string pname = foldername + "/p";
+	string qname = foldername + "/q" ;
+	string ubias = foldername + "/bu" ;
+	string ibias = foldername + "/bi" ;
+	
+	P.save(pname);
+	Q.save(qname);
+	BU.save(ubias);
+	BI.save(ibias);
+  }
+  
+  void load(string foldername)
+  {
+	string pname = foldername + "/p";
+	string qname = foldername + "/q" ;
+	string ubias = foldername + "/bu" ;
+	string ibias = foldername + "/bi" ;
+	
+	P.load(pname);
+	Q.load(qname);
+	BU.load(ubias);
+	BI.load(ibias);
+  }
 
 };
 

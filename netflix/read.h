@@ -4,11 +4,8 @@
 #include <map>
 #include <cstdio>
 #include <algorithm>
-<<<<<<< HEAD
 #include <ctime>
 #include <time.h>
-=======
->>>>>>> 57a4221f932272d40aa75013fa5ee94e3d2b47e1
 #include <cstdlib>
 
 using namespace std;

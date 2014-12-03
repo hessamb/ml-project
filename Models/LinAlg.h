@@ -46,18 +46,26 @@ public:
 
   inline Vector operator = (const Vector& input)
   {
-    n = input.n ;
-    delete []a ;
-    a = new double [n] ;
-    copy (input.a,input.a+n,a);
+    if(n != input.n)
+	{
+		n = input.n ;
+		delete []a ;
+		a = new double [n] ;
+    }
+	copy (input.a,input.a+n,a);
     return *this ;
   }
 
   inline Vector (const Vector& input)
   {
-    n = input.n ;
-    a = new double [n] ;
+	if(n != input.n)
+	{
+		n = input.n ;
+		delete []a ;
+		a = new double [n] ;
+	}
     copy ( input.a , input.a+n , a);
+	return *this ;
   }
 
   inline Vector operator +(const Vector& v2)const
@@ -88,11 +96,11 @@ public:
 
   }
   
-  inline Vector operator *(const int c)const
+  inline Vector operator *(const double c)const
   {
     Vector result(n) ;
     for(int i=0 ; i<n ; i++)
-      result[i] = c*a[i] ;
+      result[i] = c * a[i] ;
     return result ;
   }
 
@@ -103,10 +111,10 @@ public:
       cerr << "dimention mismatch" << endl ;
       return -1 ;
     }
-    int sum = 0 ;
+    double sum = 0 ;
     for (int i=0 ; i<n ; i++)
     {
-      sum += a[i]*v2.a[i] ;
+      sum += a[i] * v2.a[i] ;
     }
     return sum ;
   }
@@ -123,6 +131,7 @@ public:
     {
       a[i] -=  v2.a[i] ;
     }
+  }
 	inline void operator += (const Vector& v2)const
 	{	
 		if(v2.n != n)
@@ -136,7 +145,7 @@ public:
 			a[i] +=  v2.a[i] ;
 		}
     }
-	
+ 	
 	void save (string filename)
 	{
 		FILE * pFile ;
@@ -215,6 +224,11 @@ public:
 		
 		fclose (pFile);
 	
+	}
+	
+	~Matrix () 
+	{
+		delete []a ;
 	}
 
 };
