@@ -30,6 +30,24 @@ public :
     LAMBDA = lambda ; ALPHA = alpha ; NSTEP = nstep  ;
   }
 
+  double test (NetflixReader buff)
+  {
+	double RMSE = 0 ;
+	tuple* rating ;
+	double predict = 0 ;
+	int counter = 0 ;
+	while(( rating = buff.nextTuple() ) != NULL)
+    {
+		predict = ave_rate + BU[rating->uid] + BI[rating->iid] + P[rating->uid] * Q[rating->iid] ;
+		RMSE += pow(rating->r - predict,2);
+		counter ++ ;
+	}
+	RMSE /= counter ;
+	RMSE = sqrt(RMSE) ;
+	
+	return RMSE ; 
+    
+  }
   void Learn (NetflixReader buff)
   {
     for (int step = 0 ; step<NSTEP ; step++)
