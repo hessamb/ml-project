@@ -95,13 +95,13 @@ public :
 	fclose(pfile) ;
 	
 	P.save(pname);
-	cerr << "salam1" <<endl 
+	cerr << "salam1" <<endl ; 
 	Q.save(qname);
-	cerr << "salam2" <<endl 
+	cerr << "salam2" <<endl ;
 	BU.save(ubias);
-	cerr << "salam3" <<endl 
+	cerr << "salam3" <<endl ;
 	BI.save(ibias);
-	cerr << "salam4" <<endl 
+	cerr << "salam4" <<endl ;
   }
 
   void load(string foldername)
