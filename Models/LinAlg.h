@@ -1,3 +1,6 @@
+#ifndef __LINALG__
+#define __LINALG__
+
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -125,3 +128,5 @@ public:
       return a[i] ;
   }
 };
+
+#endif
