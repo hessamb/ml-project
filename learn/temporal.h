@@ -6,6 +6,7 @@
 #include "../models/linalg.h"
 #include "../utils/math.h"
 #include "../conf.h"
+
 int get_bin(int t){
   return 0;
 }

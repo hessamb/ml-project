@@ -85,7 +85,7 @@ public:
 };
 
 
-class NetflixReaderRAM: NetflixReader{
+class NetflixReaderRAM: public NetflixReader{
   int dataSize, ptr;
   tuple** data;
 public:
