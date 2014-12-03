@@ -1,3 +1,6 @@
+#ifndef __READ_INTERFACE__
+#define __READ_INTERFACE__
+
 struct tuple{
   int uid, iid, r, t;
 
@@ -15,3 +18,5 @@ public:
   inline virtual tuple* nextTuple() = 0;
   inline virtual void reset() = 0;
 };
+
+#endif
