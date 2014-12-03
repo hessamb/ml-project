@@ -1,3 +1,6 @@
+#ifndef __READ__
+#define __READ__
+
 #include <map>
 #include <cstdio>
 #include <algorithm>
@@ -120,3 +123,6 @@ public:
   }
 
 };
+
+
+#endif

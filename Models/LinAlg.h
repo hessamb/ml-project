@@ -1,3 +1,6 @@
+#ifndef __LINALG__
+#define __LINALG__
+
 #include <iostream>
 #include <stdio.h>
 #include <cmath>
@@ -180,3 +183,5 @@ public:
 	
 	}
 };
+
+#endif

@@ -1,3 +1,7 @@
+#ifndef __CONF__
+#define __CONF__
+
+
 const int NETFLIX_MOVIES = 17770;
 const int NETFLIX_USERS = 480189;
 const int NETFLIX_DATASET_SIZE = 100480507;
@@ -10,3 +14,5 @@ const double NETFLIX_TEMPORAL_NSTEP = 20;
 const int TEMPORAL_BINS_COUNT = 1;
 const int TEMPORAL_RANK = 250;
 const double TEMPORAL_DYNAMICS_BETA = 0.4;
+
+#endif

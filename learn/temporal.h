@@ -1,3 +1,6 @@
+#ifndef __TEMPORAL__
+#define __TEMPORAL__
+
 #include <cstring>
 #include <cmath>
 #include "../models/linalg.h"
@@ -8,6 +11,8 @@ int get_bin(int t){
 }
 
 class TemporalDynamicsParams{
+
+public:
   double mu;
   Vector b_u;
   Vector b_i;
@@ -18,8 +23,6 @@ class TemporalDynamicsParams{
   Vector a_u;
   Vector t_u;
 
-
-public:
   TemporalDynamicsParams(int users, int items, int f): mu(0), b_u(users),
     b_i(items), b_iBin(items, TEMPORAL_BINS_COUNT), q_i(items, f),
     p_u(users, f), ap_u(users, f), a_u(users), t_u(users) {
@@ -46,9 +49,9 @@ public:
     b_iBin[i][get_bin(t)] -= eta * (-2 * error + 2 * lmbd * b_iBin[i][get_bin(t)]);
     a_u[u] -= eta * (-2 * error * dev(u,t) + 2 * lmbd * a_u[u]);
 
-    p_u[u] -= eta * (q_i[i] * error * (-2) + p_u[u] * lmbd * 2);
-    ap_u[u] -= eta * (q_i[i] * error * (-2) * dev(u,t) + p_u[u] * lmbd * 2);
-    q_i[i] -= eta * (pref * error * (-2) + q_i[i] * lmbd * 2);
+    p_u[u] -= (q_i[i] * error * (-2) + p_u[u] * lmbd * 2) * eta;
+    ap_u[u] -= (q_i[i] * error * (-2) * dev(u,t) + p_u[u] * lmbd * 2) * eta;
+    q_i[i] -= (pref * error * (-2) + q_i[i] * lmbd * 2) * eta;
   }
 };
 
@@ -71,7 +74,7 @@ TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lam
     if (rates[u] == 0)
       params->t_u[u] = 0;
     else
-      params.t_u[u] /= rates[u];
+      params->t_u[u] /= rates[u];
   }
 
   while(nstep--){
@@ -84,3 +87,5 @@ TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lam
 
   return params;
 }
+
+#endif
