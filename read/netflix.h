@@ -86,6 +86,8 @@ public:
       tuple* cur = NetflixReader::nextTuple();
       if (cur == NULL){
         fprintf(stderr, "ERR: There are not %d datapoints in the set.\n", dataSize);
+        dataSize = i;
+        break;
       }
       data[i] = cur;
     }

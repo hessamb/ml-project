@@ -24,6 +24,17 @@ public:
     memset(a,0,n*sizeof(double));
   }
 
+  Vector(string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"r");
+    fscanf(pFile, " %d", &n);
+    a = new double[n];
+    for (int i=0 ; i<n ; i++)
+      fscanf (pFile, " %lf" , &a[i]);
+      fclose (pFile);
+  }
+
   ~Vector(){ delete []a ;}
 
   inline void resize(int nn)
@@ -144,19 +155,10 @@ public:
   void save (string filename)
   {
     FILE * pFile ;
-    pFile = fopen (filename.c_str(),"w+");
-    fprintf (pFile, "%d \n " , n);
+    pFile = fopen (filename.c_str(),"w");
+    fprintf (pFile, "%d\n " , n);
     for (int i=0 ; i<n ; i++)
       fprintf (pFile, "%lf " , a[i]);
-    fclose (pFile);
-  }
-
-  void load (string filename)
-  {
-    FILE * pFile ;
-    pFile = fopen (filename.c_str(),"r");
-    for (int i=0 ; i<n ; i++)
-      fscanf (pFile, "%lf " , &a[i]);
     fclose (pFile);
   }
 
@@ -179,6 +181,26 @@ public:
     {
       a[i].resize(n);
     }
+  }
+
+  Matrix(string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"r");
+    fscanf(pFile, "%d %d", &m, &n);
+
+    a =  new Vector [m];
+    for (int i=0 ; i<m ; i++)
+    {
+      a[i].resize(n);
+    }
+
+    for (int i=0 ; i<m ; i++)
+    {
+      for(int j=0 ; j<n ; j++ )
+        fscanf (pFile, " %lf" , &a[i][j]);
+    }
+    fclose (pFile);
 
   }
 
@@ -195,8 +217,8 @@ public:
   void save (string filename)
   {
     FILE * pFile ;
-    pFile = fopen (filename.c_str(),"w+");
-    fprintf (pFile, "%d %d \n " , m , n);
+    pFile = fopen (filename.c_str(),"w");
+    fprintf (pFile, "%d %d\n " , m , n);
     for (int i=0 ; i<m ; i++)
     {
       for(int j=0 ; j<n ; j++ )
@@ -205,20 +227,6 @@ public:
     }
 
     fclose (pFile);
-  }
-  void load (string filename)
-  {
-    FILE * pFile ;
-    pFile = fopen (filename.c_str(),"r");
-    for (int i=0 ; i<m ; i++)
-    {
-      for(int j=0 ; j<n ; j++ )
-        fscanf (pFile, "%lf " , &a[i][j]);
-
-    }
-
-    fclose (pFile);
-
   }
 
   ~Matrix ()
