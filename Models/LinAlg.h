@@ -48,7 +48,7 @@ public:
   inline double & operator [](int i)
   {
     if (i >= n || i < 0){
-      cerr << "Limit Exceeded" << endl;
+      cerr << "Limit Exceeded " << n <<" "<< i <<endl;
 
       return *new double(-1);
     }
