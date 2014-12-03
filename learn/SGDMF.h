@@ -32,13 +32,13 @@ public :
     LAMBDA = lambda ; ALPHA = alpha ; NSTEP = nstep  ;
   }
 
-  double test (ReadInterface buff)
+  double test (ReadInterface * buff)
   {
     double RMSE = 0 ;
     tuple* rating ;
     double predict = 0 ;
     int counter = 0 ;
-    while(( rating = buff.nextTuple() ) != NULL)
+    while(( rating = buff->nextTuple() ) != NULL)
       {
       predict = ave_rate + BU[rating->uid] + BI[rating->iid] + P[rating->uid] * Q[rating->iid] ;
       RMSE += pow(rating->r - predict,2);
@@ -46,17 +46,17 @@ public :
     }
     RMSE /= counter ;
     RMSE = sqrt(RMSE) ;
-
+	buff->reset();
     return RMSE ;
   }
 
-  void Learn (NetflixReader buff)
+  void Learn (ReadInterface* buff)
   {
     for (int step = 0 ; step<NSTEP ; step++)
     {
       cout << "iteration :" << step << endl ;
       tuple* rating ;
-      while(( rating = buff.nextTuple() ) != NULL)
+      while(( rating = buff->nextTuple() ) != NULL)
       {
         double eij = rating->r - P[rating->uid] * Q[rating->iid] - BU[rating->uid] - BI[rating->iid] - ave_rate ;
 
@@ -68,7 +68,7 @@ public :
         P[rating->uid] += ( Q[rating->iid] * (2 * eij) - (P[rating->uid] * LAMBDA) ) * ALPHA ;
         Q[rating->iid] += ( P[rating->uid] * (2 * eij) - Q[rating->iid] * LAMBDA ) * ALPHA ;
       }
-      buff.reset() ;
+      buff->reset() ;
     }
 
   }

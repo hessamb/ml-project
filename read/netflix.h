@@ -52,12 +52,13 @@ public:
       file = fopen(getCurrentFile(), "r");
       fscanf(file, "%s", new char[20]);
     }
-    struct tm tm;
-    tm.tm_sec = tm.tm_min = tm.tm_hour = 0;
+	
+	//printf("%d,%d,%d-%d-%d\n", u, r, y, m, d);
+    struct tm tm = {0};
     tm.tm_year = y; tm.tm_mon = m; tm.tm_mday = d;
-
+	
     time_t epoch = mktime(&tm);
-
+	//printf("%d\n", epoch);
     int uid = getUid(u);
     int iid = cur_movie-1;
     int t = epoch / 86400;
@@ -83,11 +84,12 @@ public:
 
     data = new tuple*[dataSize];
     for (int i=0 ; i<dataSize ; i++){
-      tuple* cur = NetflixReader::nextTuple();
+	  tuple* cur = NetflixReader::nextTuple();
       if (cur == NULL){
         fprintf(stderr, "ERR: There are not %d datapoints in the set.\n", dataSize);
       }
       data[i] = cur;
+	  //printf("%d  %d \n",cur->r, cur->t) ;
     }
     printf("ALL FILES READ\n");
     ptr = 0;
