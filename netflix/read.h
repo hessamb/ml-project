@@ -4,7 +4,6 @@
 #include <map>
 #include <cstdio>
 #include <algorithm>
-#include <ctime>
 #include <cstdlib>
 
 using namespace std;
@@ -50,10 +49,9 @@ public:
   }
 
   inline virtual tuple* nextTuple(){
-    int u, r;
-    char date[15];
-    while (fscanf(file, "%d,%d,%s", &u, &r, date) == EOF){
-      printf("FILE %d finished.\n", cur_movie);
+    int u, r, y, m, d;
+    while (fscanf(file, "%d,%d,%d-%d-%d", &u, &r, &y, &m, &d) == EOF){
+      printf("FILE %d FINISHED.\n", cur_movie);
       fclose(file);
       cur_movie++;
       if (cur_movie>movies)
@@ -63,12 +61,9 @@ public:
     }
     struct tm tm;
     tm.tm_sec = tm.tm_min = tm.tm_hour = 0;
+    tm.tm_year = y; tm.tm_mon = m; tm.tm_mday = d;
 
-    time_t epoch = 0;
-    if ( strptime(date, "%Y-%m-%d", &tm) != NULL ){
-      epoch = mktime(&tm);
-    }else
-      fprintf(stderr, "ERR: TIME FORMAT NOT SUPPORTED!");
+    time_t epoch = mktime(&tm);
 
     int uid = getUid(u);
     int iid = cur_movie-1;
