@@ -2,8 +2,8 @@
 #define __CONF__
 
 
-//const int NETFLIX_MOVIES = 17770;
-const int NETFLIX_MOVIES = 10000;
+const int NETFLIX_MOVIES = 17770;
+//const int NETFLIX_MOVIES = 10000;
 const int NETFLIX_USERS = 480189;
 const int NETFLIX_DATASET_SIZE = 100480507;
 
