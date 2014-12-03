@@ -58,14 +58,12 @@ public:
 
   inline Vector (const Vector& input)
   {
-	if(n != input.n)
-	{
-		n = input.n ;
-		delete []a ;
-		a = new double [n] ;
-	}
+	n = input.n ;
+	a = new double [n] ;
+	
     copy ( input.a , input.a+n , a);
-	return *this ;
+	
+	
   }
 
   inline Vector operator +(const Vector& v2)const
