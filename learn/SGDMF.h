@@ -76,20 +76,32 @@ public :
 	  }
       buff->reset() ;
     }
+	
 	save("alaki");
-
+	
   }
   void save(string foldername)
   {
+	cerr << "salam" <<endl ;
 	string pname = foldername + "/p";
 	string qname = foldername + "/q" ;
 	string ubias = foldername + "/bu" ;
 	string ibias = foldername + "/bi" ;
-
+	string imu = foldername + "/mu" ;
+	
+	FILE *pfile ;
+	pfile = fopen(imu.c_str(),"w+") ;
+	fprintf(pfile,"%lf",ave_rate) ;
+	fclose(pfile) ;
+	
 	P.save(pname);
+	cerr << "salam1" <<endl 
 	Q.save(qname);
+	cerr << "salam2" <<endl 
 	BU.save(ubias);
+	cerr << "salam3" <<endl 
 	BI.save(ibias);
+	cerr << "salam4" <<endl 
   }
 
   void load(string foldername)
