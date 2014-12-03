@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include "../Models/linalg.h"
-#include "../read/netflix.h"
+#include "../read/interface.h"
+#include "../conf.h"
+
 using namespace std ;
 
 class MF
@@ -25,7 +27,7 @@ public :
     ave_rate = 0 ;
   }
 
-  void configure (double lambda, double alpha , double nstep )
+  void configure (double lambda = NETFLIX_BASIC_LAMBDA, double alpha = NETFLIX_BASIC_ETA , double nstep = NETFLIX_BASIC_NUMOFFEATURES)
   {
     LAMBDA = lambda ; ALPHA = alpha ; NSTEP = nstep  ;
   }
