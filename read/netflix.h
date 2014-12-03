@@ -7,21 +7,11 @@
 #include <ctime>
 #include <time.h>
 #include <cstdlib>
+#include "interface.h"
 
 using namespace std;
 
-struct tuple{
-  int uid, iid, r, t;
-
-  tuple(int _uid, int _iid, int _r, int _t){
-    uid = _uid;
-    iid = _iid;
-    t = _t;
-    r = _r;
-  }
-};
-
-class NetflixReader{
+class NetflixReader: public ReadInterface{
   FILE *file;
   int movies, cur_movie;
   int cnt;

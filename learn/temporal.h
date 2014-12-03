@@ -6,6 +6,7 @@
 #include "../models/linalg.h"
 #include "../utils/math.h"
 #include "../conf.h"
+#include "../read/netflix.h"
 
 int get_bin(int t){
   return 0;
@@ -38,6 +39,9 @@ public:
       + ( q_i[i] * (p_u[u] + ap_u[u] * dev(u,t)) );
   }
 
+  inline double rmse(){
+    return 0.0;
+  }
 
   inline void update(int u, int i, double r, int t, double eta, double lmbd){
     double error = (r - value(u,i,t));
@@ -56,7 +60,7 @@ public:
   }
 };
 
-TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lambda,
+TemporalDynamicsParams* learn_temporal(ReadInterface *ri, double eta, double lambda,
   int users, int items, int nstep, TemporalDynamicsParams *params = NULL){
 
   if (params == NULL){
@@ -67,12 +71,11 @@ TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lam
   memset(rates, 0, users*sizeof(int));
   tuple *cur;
 
-  while( (cur = nr->nextTuple()) != NULL ){
+  while( (cur = ri->nextTuple()) != NULL ){
     params->t_u[ cur->uid ] += cur->t;
     rates[ cur->uid ]++;
   }
 
-  cout << nstep << endl;
   for (int u = 0 ; u<users ; u++){
     if (rates[u] == 0)
       params->t_u[u] = 0;
@@ -80,14 +83,12 @@ TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lam
       params->t_u[u] /= rates[u];
   }
 
-  cout << nstep << endl;
   while(nstep--){
-    cout << nstep << endl;
     tuple *cur;
-    while( (cur = nr->nextTuple()) != NULL ){
+    while( (cur = ri->nextTuple()) != NULL ){
       params->update(cur->uid, cur->iid, cur->r, cur->t, eta, lambda);
     }
-    nr->reset();
+    ri->reset();
   }
 
   return params;

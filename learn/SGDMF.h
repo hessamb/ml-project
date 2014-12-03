@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "../Models/linalg.h"
-#include "../netflix/read.h"
+#include "../read/netflix.h"
 using namespace std ;
 
 class MF
@@ -30,24 +30,24 @@ public :
     LAMBDA = lambda ; ALPHA = alpha ; NSTEP = nstep  ;
   }
 
-  double test (NetflixReader buff)
+  double test (ReadInterface buff)
   {
-	double RMSE = 0 ;
-	tuple* rating ;
-	double predict = 0 ;
-	int counter = 0 ;
-	while(( rating = buff.nextTuple() ) != NULL)
-    {
-		predict = ave_rate + BU[rating->uid] + BI[rating->iid] + P[rating->uid] * Q[rating->iid] ;
-		RMSE += pow(rating->r - predict,2);
-		counter ++ ;
-	}
-	RMSE /= counter ;
-	RMSE = sqrt(RMSE) ;
-	
-	return RMSE ; 
-    
+    double RMSE = 0 ;
+    tuple* rating ;
+    double predict = 0 ;
+    int counter = 0 ;
+    while(( rating = buff.nextTuple() ) != NULL)
+      {
+      predict = ave_rate + BU[rating->uid] + BI[rating->iid] + P[rating->uid] * Q[rating->iid] ;
+      RMSE += pow(rating->r - predict,2);
+      counter ++ ;
+    }
+    RMSE /= counter ;
+    RMSE = sqrt(RMSE) ;
+
+    return RMSE ;
   }
+
   void Learn (NetflixReader buff)
   {
     for (int step = 0 ; step<NSTEP ; step++)
@@ -73,27 +73,27 @@ public :
   void save(string foldername)
   {
     string pname = foldername + "/p";
-	string qname = foldername + "/q" ;
-	string ubias = foldername + "/bu" ;
-	string ibias = foldername + "/bi" ;
-	
-	P.save(pname);
-	Q.save(qname);
-	BU.save(ubias);
-	BI.save(ibias);
+  string qname = foldername + "/q" ;
+  string ubias = foldername + "/bu" ;
+  string ibias = foldername + "/bi" ;
+
+  P.save(pname);
+  Q.save(qname);
+  BU.save(ubias);
+  BI.save(ibias);
   }
-  
+
   void load(string foldername)
   {
-	string pname = foldername + "/p";
-	string qname = foldername + "/q" ;
-	string ubias = foldername + "/bu" ;
-	string ibias = foldername + "/bi" ;
-	
-	P.load(pname);
-	Q.load(qname);
-	BU.load(ubias);
-	BI.load(ibias);
+  string pname = foldername + "/p";
+  string qname = foldername + "/q" ;
+  string ubias = foldername + "/bu" ;
+  string ibias = foldername + "/bi" ;
+
+  P.load(pname);
+  Q.load(qname);
+  BU.load(ubias);
+  BI.load(ibias);
   }
 
 };

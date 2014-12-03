@@ -1,4 +1,4 @@
-#include "netflix/read.h"
+#include "read/netflix.h"
 #include "learn/temporal.h"
 #include "conf.h"
 #include <iostream>
