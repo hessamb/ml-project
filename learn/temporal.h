@@ -1,8 +1,8 @@
 #include <cstring>
 #include <cmath>
-#include "../models/linalgs.h"
+#include "../models/linalg.h"
 #include "../utils/math.h"
-
+#include "../conf.h"
 int get_bin(int t){
   return 0;
 }
@@ -30,7 +30,7 @@ public:
   }
 
   inline double value(int u, int i, int t){
-    return mu + b_u[u] + a_u[u] * dev(u,t) + b_i[i] + b_iBin[i,get_bin(t)]
+    return mu + b_u[u] + a_u[u] * dev(u,t) + b_i[i] + b_iBin[i][get_bin(t)]
       + ( q_i[i] * (p_u[u] + ap_u[u] * dev(u,t)) );
   }
 
@@ -38,28 +38,28 @@ public:
   inline void update(int u, int i, double r, int t, double eta, double lmbd){
     double error = (r - value(u,i,t));
 
-    Vector pref = p_u[u] + ap_u[u]*self.dev(u,t);
+    Vector pref = p_u[u] + ap_u[u] * dev(u,t);
 
     mu -= eta * (-2 * error);
     b_u[u] -= eta * (-2 * error + 2 * lmbd * b_u[u]);
     b_i[i] -= eta * (-2 * error + 2 * lmbd * b_i[i]);
-    b_iBin[i,get_bin(t)] -= eta * (-2 * error + 2 * lmbd * b_iBin[i,get_bin(t)]);
+    b_iBin[i][get_bin(t)] -= eta * (-2 * error + 2 * lmbd * b_iBin[i][get_bin(t)]);
     a_u[u] -= eta * (-2 * error * dev(u,t) + 2 * lmbd * a_u[u]);
 
-    p_u[u] -= eta * (q_i[i] * error * (-2) + self.p_u[u,:] * lmbd * 2);
-    ap_u[u] -= eta * (q_i[i] * error * (-2) * self.dev(u,t) + self.p_u[u,:] * lmbd * 2);
-    q_i[i] -= eta * (pref * error * (-2) + self.q_i[i,:] * lmbd * 2);
+    p_u[u] -= eta * (q_i[i] * error * (-2) + p_u[u] * lmbd * 2);
+    ap_u[u] -= eta * (q_i[i] * error * (-2) * dev(u,t) + p_u[u] * lmbd * 2);
+    q_i[i] -= eta * (pref * error * (-2) + q_i[i] * lmbd * 2);
   }
 };
 
-TemporalDynamicsParams* learn_model(NetflixReader *nr, double eta, double lambda,
-  int users, int items, int nstep, TemporalDynamicParams *params = NULL){
+TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lambda,
+  int users, int items, int nstep, TemporalDynamicsParams *params = NULL){
 
   if (params == NULL){
     params = new TemporalDynamicsParams(users, items, TEMPORAL_RANK);
   }
 
-  int *rates = new int[users]
+  int *rates = new int[users];
   memset(rates, 0, users*sizeof(int));
   tuple *cur;
   while( (cur = nr->nextTuple()) != NULL ){
@@ -79,6 +79,7 @@ TemporalDynamicsParams* learn_model(NetflixReader *nr, double eta, double lambda
     while( (cur = nr->nextTuple()) != NULL ){
       params->update(cur->uid, cur->iid, cur->r, cur->t, eta, lambda);
     }
+    nr->reset();
   }
 
   return params;
