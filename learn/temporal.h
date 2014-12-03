@@ -6,6 +6,7 @@
 #include "../models/linalg.h"
 #include "../utils/math.h"
 #include "../conf.h"
+
 int get_bin(int t){
   return 0;
 }
@@ -57,10 +58,11 @@ public:
 
 TemporalDynamicsParams* learn_temporal(NetflixReader *nr, double eta, double lambda,
   int users, int items, int nstep, TemporalDynamicsParams *params = NULL){
-
+  
   if (params == NULL){
     params = new TemporalDynamicsParams(users, items, TEMPORAL_RANK);
   }
+  cout << nstep << endl;
 
   int *rates = new int[users];
   memset(rates, 0, users*sizeof(int));

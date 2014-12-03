@@ -110,21 +110,19 @@ public:
     }
     return sum ;
   }
-  
-	inline void operator -= (const Vector& v2)const
-	{	
-		if(v2.n != n)
-		{
-			cerr << "dimention mismatch" << endl ;
-			return  ;
-		}
-		
-		for (int i=0 ; i<n ; i++)
-		{
-			a[i] -=  v2.a[i] ;
-		}
+
+  inline void operator -= (const Vector& v2)const
+  {
+    if(v2.n != n)
+    {
+      cerr << "dimention mismatch" << endl ;
+      return  ;
     }
-	
+
+    for (int i=0 ; i<n ; i++)
+    {
+      a[i] -=  v2.a[i] ;
+    }
 	inline void operator += (const Vector& v2)const
 	{	
 		if(v2.n != n)
@@ -190,7 +188,6 @@ public:
     else
       return a[i] ;
   }
-  
   void save (string filename)
 	{
 		FILE * pFile ;
@@ -219,6 +216,7 @@ public:
 		fclose (pFile);
 	
 	}
+
 };
 
 #endif
