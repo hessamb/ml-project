@@ -46,9 +46,12 @@ public:
 
   inline Vector operator = (const Vector& input)
   {
-    n = input.n ;
-    delete []a ;
-    a = new double [n] ;
+    if(n != input.n)
+    {
+      n = input.n ;
+      delete []a ;
+      a = new double [n] ;
+    }
     copy (input.a,input.a+n,a);
     return *this ;
   }
@@ -73,12 +76,25 @@ public:
     return result ;
 
   }
+  inline Vector operator -(const Vector& v2)const
+  {
+    if(v2.n != n)
+    {
+      cerr << "dimention mismatch" << endl ;
+      return *this ;
+    }
+    Vector result(n) ;
+    for(int i=0 ; i<n ; i++)
+      result[i] = a[i] - v2.a[i] ;
+    return result ;
 
-  inline Vector operator *(const int c)const
+  }
+
+  inline Vector operator *(const double c)const
   {
     Vector result(n) ;
     for(int i=0 ; i<n ; i++)
-      result[i] = c*a[i] ;
+      result[i] = c * a[i] ;
     return result ;
   }
 
@@ -89,10 +105,10 @@ public:
       cerr << "dimention mismatch" << endl ;
       return -1 ;
     }
-    int sum = 0 ;
+    double sum = 0 ;
     for (int i=0 ; i<n ; i++)
     {
-      sum += a[i]*v2.a[i] ;
+      sum += a[i] * v2.a[i] ;
     }
     return sum ;
   }
@@ -111,15 +127,38 @@ public:
     }
   }
 
-  // void save (string filename)
-  // {
-  // 	File * pFile ;
-  // 	pFile = fopen (filename.c_str(),"w+");
-  // 	fprintf (pFile, "%d \n " , n);
-  // 	for (int i=0 ; i<n ; i++)
-  // 		fprintf (pFile, "%lf " , a[i]);
-  // 	fclose (pFile);
-  // }
+  inline void operator += (const Vector& v2)const
+  {
+    if(v2.n != n)
+    {
+      cerr << "dimention mismatch" << endl ;
+      return  ;
+    }
+
+    for (int i=0 ; i<n ; i++)
+    {
+      a[i] +=  v2.a[i] ;
+    }
+  }
+
+  void save (string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"w+");
+    fprintf (pFile, "%d \n " , n);
+    for (int i=0 ; i<n ; i++)
+      fprintf (pFile, "%lf " , a[i]);
+    fclose (pFile);
+  }
+
+  void load (string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"r");
+    for (int i=0 ; i<n ; i++)
+      fscanf (pFile, "%lf " , &a[i]);
+    fclose (pFile);
+  }
 
 };
 
@@ -153,36 +192,40 @@ public:
     else
       return a[i] ;
   }
+  void save (string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"w+");
+    fprintf (pFile, "%d %d \n " , m , n);
+    for (int i=0 ; i<m ; i++)
+    {
+      for(int j=0 ; j<n ; j++ )
+        fprintf (pFile, "%lf " , a[i][j]);
+      fprintf (pFile,"\n") ;
+    }
 
-  // void save (string filename)
-  // {
-  // 	File * pFile ;
-  // 	pFile = fopen (filename.c_str(),"w+");
-  // 	fprintf (pFile, "%d %d \n " , m , n);
-  // 	for (int i=0 ; i<m ; i++)
-  // 	{
-  // 		for(int j=0 ; j<n ; j++ )
-  // 			fprintf (pFile, "%lf " , a[i][j]);
-  // 		fprintf (pFile,"\n") ;
-  // 	}
-  //
-  // 	fclose (pFile);
-  // }
-  // void load (string filename)
-  // {
-  // 	File * pFile ;
-  // 	pFile = fopen (filename.c_str(),"w+");
-  // 	fprintf (pFile, "%d %d \n " , m , n);
-  // 	for (int i=0 ; i<m ; i++)
-  // 	{
-  // 		for(int j=0 ; j<n ; j++ )
-  // 			fprintf (pFile, "%lf " , a[i][j]);
-  // 		fprintf (pFile,"\n") ;
-  // 	}
-  //
-  // 	fclose (pFile);
-  //
-  // }
+    fclose (pFile);
+  }
+  void load (string filename)
+  {
+    FILE * pFile ;
+    pFile = fopen (filename.c_str(),"r");
+    for (int i=0 ; i<m ; i++)
+    {
+      for(int j=0 ; j<n ; j++ )
+        fscanf (pFile, "%lf " , &a[i][j]);
+
+    }
+
+    fclose (pFile);
+
+  }
+
+  ~Matrix ()
+  {
+    delete []a ;
+  }
+
 };
 
 #endif
