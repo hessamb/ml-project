@@ -73,6 +73,21 @@ public:
     return result ;
 
   }
+  
+  inline Vector operator -(const Vector& v2)const
+  {
+    if(v2.n != n)
+    {
+      cerr << "dimention mismatch" << endl ;
+      return *this ;
+    }
+    Vector result(n) ;
+    for(int i=0 ; i<n ; i++)
+      result[i] = a[i] - v2.a[i] ;
+    return result ;
+
+  }
+  
   inline Vector operator *(const int c)const
   {
     Vector result(n) ;
@@ -110,13 +125,36 @@ public:
 		}
     }
 	
+	inline void operator += (const Vector& v2)const
+	{	
+		if(v2.n != n)
+		{
+			cerr << "dimention mismatch" << endl ;
+			return  ;
+		}
+		
+		for (int i=0 ; i<n ; i++)
+		{
+			a[i] +=  v2.a[i] ;
+		}
+    }
+	
 	void save (string filename)
 	{
-		File * pFile ;
+		FILE * pFile ;
 		pFile = fopen (filename.c_str(),"w+");
 		fprintf (pFile, "%d \n " , n);
 		for (int i=0 ; i<n ; i++)
 			fprintf (pFile, "%lf " , a[i]);
+		fclose (pFile);
+	}
+	
+	void load (string filename)
+	{
+		FILE * pFile ;
+		pFile = fopen (filename.c_str(),"r");
+		for (int i=0 ; i<n ; i++)
+			fscanf (pFile, "%lf " , &a[i]);
 		fclose (pFile);
 	}
 
@@ -155,7 +193,7 @@ public:
   
   void save (string filename)
 	{
-		File * pFile ;
+		FILE * pFile ;
 		pFile = fopen (filename.c_str(),"w+");
 		fprintf (pFile, "%d %d \n " , m , n);
 		for (int i=0 ; i<m ; i++)
@@ -169,14 +207,13 @@ public:
 	}
 	void load (string filename)
 	{
-		File * pFile ;
-		pFile = fopen (filename.c_str(),"w+");
-		fprintf (pFile, "%d %d \n " , m , n);
+		FILE * pFile ;
+		pFile = fopen (filename.c_str(),"r");
 		for (int i=0 ; i<m ; i++)
 		{
 			for(int j=0 ; j<n ; j++ )
-				fprintf (pFile, "%lf " , a[i][j]);
-			fprintf (pFile,"\n") ;
+				fscanf (pFile, "%lf " , &a[i][j]);
+			
 		}
 		
 		fclose (pFile);
