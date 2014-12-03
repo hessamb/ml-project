@@ -1,5 +1,8 @@
-const int MOVIES_TOTAL = 17770;
-const int DATASET_SIZE = 100480507;
+const int NETFLIX_MOVIES = 17770;
+const int NETFLIX_USERS = 480189;
+const int NETFLIX_DATASET_SIZE = 100480507;
 
 
 const int TEMPORAL_BINS_COUNT = 1;
+const int TEMPORAL_RANK = 250;
+const double TEMPORAL_DYNAMICS_BETA = 0.4;

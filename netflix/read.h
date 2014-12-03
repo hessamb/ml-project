@@ -7,12 +7,13 @@
 using namespace std;
 
 struct tuple{
-  int uid, iid, t;
+  int uid, iid, r, t;
 
-  tuple(int _uid, int _iid, int _t){
+  tuple(int _uid, int _iid, int _r, int _t){
     uid = _uid;
     iid = _iid;
     t = _t;
+    r = _r;
   }
 };
 
@@ -46,9 +47,9 @@ public:
   }
 
   inline virtual tuple* nextTuple(){
-    int u, i;
+    int u, r;
     char date[15];
-    while (fscanf(file, "%d,%d,%s", &u, &i, date) == EOF){
+    while (fscanf(file, "%d,%d,%s", &u, &r, date) == EOF){
       printf("FILE %d finished.\n", cur_movie);
       fclose(file);
       cur_movie++;
@@ -67,9 +68,15 @@ public:
       fprintf(stderr, "ERR: TIME FORMAT NOT SUPPORTED!");
 
     int uid = getUid(u);
-    int iid = i-1;
-    int t = epoch;
-    return new tuple(uid, iid, t);
+    int iid = cur_movie-1;
+    int t = epoch / 86400;
+    return new tuple(uid, iid, r, t);
+  }
+
+  inline virtual void reset(){
+    cur_movie = 1;
+    file = fopen(getCurrentFile(), "r");
+    fscanf(file, "%s", new char[20]);
   }
 
 };
