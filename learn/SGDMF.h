@@ -70,7 +70,7 @@ public :
         ave_rate = ave_rate + ALPHA * (2 *  eij ) ;
 
         BU[rating->uid] +=  ALPHA * ( 2 *  eij - BU[rating->uid] * LAMBDA   );
-        BI[rating->iid] +=  ALPHA * ( 2 *  eij - BI[rating->uid] * LAMBDA   );
+        BI[rating->iid] +=  ALPHA * ( 2 *  eij - BI[rating->iid] * LAMBDA   );
 		
 		for (int i=0 ; i<f ; i++ )
 		{
