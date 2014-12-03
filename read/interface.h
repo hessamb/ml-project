@@ -15,8 +15,8 @@ struct tuple{
 
 class ReadInterface {
 public:
-  inline virtual tuple* nextTuple() = 0;
-  inline virtual void reset() = 0;
+  virtual tuple* nextTuple() = 0;
+  virtual void reset() = 0;
 };
 
 #endif
