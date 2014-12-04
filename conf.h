@@ -12,7 +12,7 @@ const double NETFLIX_BASIC_NSTEP = 50 ;
 
 const double NETFLIX_TEMPORAL_ETA = 0.001;
 const double NETFLIX_TEMPORAL_LAMBDA = 0.01;
-const double NETFLIX_TEMPORAL_NSTEP = 30;
+const double NETFLIX_TEMPORAL_NSTEP = 20;
 
 
 const int MOVIES_LEN_MOVIES = 1682;

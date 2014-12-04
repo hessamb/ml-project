@@ -4,6 +4,7 @@
 #include "../read/netflix.h"
 
 int main(){
+  setbuf(stdout, NULL);
 
   int start = time(0);
 
