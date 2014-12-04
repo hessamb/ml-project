@@ -21,7 +21,7 @@ public :
   Vector BU,BI ;
   double ave_rate ;
 
-  MF(int mm = 0 ,int nn =0 ,int kk = 0): P(nn,kk), Q(mm,kk),BU(nn),BI(mm)
+  MF(int mm = 0 ,int nn =0 ,int kk = 0): P(nn,kk,true), Q(mm,kk,true),BU(nn),BI(mm)
   {
     m = mm ; n = nn ; k = kk ;
     LAMBDA =0 ; ALPHA = 0 ; NSTEP = 0 ;

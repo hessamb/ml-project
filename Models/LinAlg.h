@@ -171,6 +171,20 @@ public:
   int m,n ;
   Vector* a;
 
+  Matrix (int mm=0 , int nn=0 , bool initialized = true )
+  {
+    m = mm ;
+    n = nn ;
+    a =  new Vector [m];
+
+    for (int i=0 ; i<m ; i++)
+    {
+      a[i].resize(n);
+    }
+	for(int i=0 ; i<m ; i++)
+		for(int j=0 ; j<n ; j++)
+			a[i][j] = 0.1;
+  }
   Matrix (int mm=0 , int nn=0 )
   {
     m = mm ;
