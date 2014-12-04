@@ -46,7 +46,7 @@ public:
   inline virtual tuple* nextTuple(){
     int u, r, y, m, d;
     while (fscanf(file, "%d,%d,%d-%d-%d", &u, &r, &y, &m, &d) == EOF){
-      printf("FILE %d FINISHED.\n", cur_movie);
+      // printf("FILE %d FINISHED.\n", cur_movie);
       fclose(file);
       cur_movie++;
       if (cur_movie>movies)
@@ -149,7 +149,6 @@ public:
     int len = line.length();
 
     if (line[len-1] == ':'){
-      printf("%s %d\n", line.c_str(), len);
       line.erase(len-1);
       movie = atoi(line.c_str()) -1;
       nr->jumpToFile(movie+1);

@@ -51,7 +51,7 @@ public :
     }
     RMSE /= counter ;
     RMSE = sqrt(RMSE) ;
-  buff->reset();
+    buff->reset();
     return RMSE ;
   }
 
@@ -62,26 +62,29 @@ public :
     {
       cout << "iteration :" << step << endl ;
       cout << "time : " << time(0) -ptime << endl ;
-  ptime = time(0) ;
-  tuple* rating ;
+      ptime = time(0) ;
+      tuple* rating ;
       while(( rating = buff->nextTuple() ) != NULL)
       {
-    int f =  P.n ;
-    double eij = rating->r - BU[rating->uid] - BI[rating->iid] - ave_rate;
-    for (int i=0 ; i<f ; i++)
-      eij -=   P[rating->uid][i] * Q[rating->iid][i]  ;
+        int f =  P.n ;
+        double eij = rating->r - BU[rating->uid] - BI[rating->iid] - ave_rate;
+        for (int i=0 ; i<f ; i++)
+          eij -=   P[rating->uid][i] * Q[rating->iid][i]  ;
+
+        // cout << eij << endl;
 
         ave_rate = ave_rate + ALPHA * (2 *  eij ) ;
 
         BU[rating->uid] +=  ALPHA * ( 2 *  eij - BU[rating->uid] * LAMBDA   );
         BI[rating->iid] +=  ALPHA * ( 2 *  eij - BI[rating->iid] * LAMBDA   );
 
-    for (int i=0 ; i<f ; i++ )
-    {
-      P[rating->uid][i] += ( Q[rating->iid][i] * (2 * eij) - P[rating->uid][i] * LAMBDA ) * ALPHA ;
-      Q[rating->iid][i] += ( P[rating->uid][i] * (2 * eij) - Q[rating->iid][i] * LAMBDA ) * ALPHA ;
-    }
-    }
+        for (int i=0 ; i<f ; i++ )
+        {
+          P[rating->uid][i] += ( Q[rating->iid][i] * (2 * eij) - P[rating->uid][i] * LAMBDA ) * ALPHA ;
+          Q[rating->iid][i] += ( P[rating->uid][i] * (2 * eij) - Q[rating->iid][i] * LAMBDA ) * ALPHA ;
+          // cout << P[rating->uid][i] << " " << Q[rating->iid][i] << endl;
+        }
+      }
       buff->reset() ;
     }
 

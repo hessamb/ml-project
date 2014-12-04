@@ -28,7 +28,7 @@ int main()
 
 
       NETFLIX_BASIC_LAMBDA = lambda[i];
-      MF mf( MOVIES_LEN_MOVIES , MOVIES_LEN_USERS , 250) ;
+      MF mf( MOVIES_LEN_MOVIES , MOVIES_LEN_USERS , 100) ;
       mf.configure() ;
       mf.Learn(mr) ;
 

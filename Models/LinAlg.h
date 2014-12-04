@@ -171,7 +171,7 @@ public:
   int m,n ;
   Vector* a;
 
-  Matrix (int mm=0 , int nn=0 , bool initialized = true )
+  Matrix (int mm, int nn, bool initialized)
   {
     m = mm ;
     n = nn ;
@@ -181,10 +181,15 @@ public:
     {
       a[i].resize(n);
     }
-	for(int i=0 ; i<m ; i++)
-		for(int j=0 ; j<n ; j++)
-			a[i][j] = 0.1;
+    for(int i=0 ; i<m ; i++)
+      for(int j=0 ; j<n ; j++){
+        if (rand()%2)
+          a[i][j] = 0.1;
+        else
+          a[i][j] = -0.1;
+      }
   }
+
   Matrix (int mm=0 , int nn=0 )
   {
     m = mm ;
