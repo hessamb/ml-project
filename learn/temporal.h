@@ -102,7 +102,7 @@ public:
     pFile = fopen ( (directory + "/mu").c_str(),"w");
     fprintf (pFile, "%lf\n " , mu);
     fclose(pFile);
-    
+
     b_u.save(directory + "/b_u");
     b_i.save(directory + "/b_i");
     b_iBin.save(directory + "/b_iBin");

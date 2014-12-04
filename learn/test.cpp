@@ -1,21 +1,54 @@
 #include<iostream>
 #include "SGDMF.h"
-#include "../read/netflix.h"
+#include "../read/movieslen.h"
 #include "../conf.h"
 
 using namespace std ;
 
 int main()
-{
-	NetflixReaderRAM buff(NETFLIX_MOVIES, NETFLIX_DATASET_SIZE) ;
-	MF mf( NETFLIX_MOVIES , NETFLIX_USERS , 250) ; 
-	
-	mf.configure() ;
-	mf.Learn(&buff) ;
-	
-	double RMSE = mf.test(&buff) ;
-	cout << "RMSE is: " << RMSE ;
+{  
+  int paramSize = 7;
+  double lambda[] = {0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3};
+
+  double mini = 1e9;
+  double best_lambda = 0;
+
+  for (int i=0 ; i<paramSize ; i++){
+    string ind = "0";
+    double rmse = 0;
+    for (int k=1 ; k<=5 ; k++){
+      ind[0] = k + '0';
+
+      int start = time(0);
+      MovieslenReaderRAM *mr = new MovieslenReaderRAM("u" + ind + ".base",
+      MOVIES_LEN_DATASET_SIZE);
+      int loaded = time(0);
+
+      cout << "READING DATA TOOK " << (loaded - start) << " SECONDS." << endl;
 
 
-	return 0 ;
+      NETFLIX_BASIC_LAMBDA = lambda[i];
+      MF mf( MOVIES_LEN_MOVIES , MOVIES_LEN_USERS , 250) ;
+      mf.configure() ;
+      mf.Learn(mr) ;
+
+      MovieslenReaderRAM *mr_test = new MovieslenReaderRAM("u" + ind + ".test",
+      MOVIES_LEN_DATASET_SIZE);
+
+      rmse += mf.test(mr_test);
+    }
+
+    rmse /= 5;
+    if (rmse < mini){
+      mini = rmse;
+      best_lambda = lambda[i];
+    }
+
+    cout << "FOR LAMBDA = " << lambda[i] << "; RMSE = " << rmse << "." << endl;
+  }
+
+  cout << "BEST LAMBDA = " << best_lambda << 	" BEST RMSE " << mini << endl;
+
+
+  return 0 ;
 }

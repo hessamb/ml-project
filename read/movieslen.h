@@ -1,12 +1,14 @@
 #ifndef __MOVIES_LEN__
 #define __MOVIES_LEN__
 
+#include "interface.h"
+
 class MovieslenReader: public ReadInterface{
   FILE *file;
 
 public:
-  MoviesReader(string filePath){
-    file = fopen(fileName.c_str(), "r");
+  MovieslenReader(string filename){
+    file = fopen(("data/movieslen/" + filename).c_str(), "r");
   }
 
   inline virtual tuple* nextTuple(){
@@ -15,7 +17,7 @@ public:
       return NULL;
     }
     t /= 24 * 60 * 60;
-    return new tuple(u, i, r, t);
+    return new tuple(u-1, i-1, r, t);
   }
 
   inline virtual void reset(){
@@ -30,7 +32,7 @@ class MovieslenReaderRAM: public MovieslenReader{
   int dataSize, ptr;
   tuple** data;
 public:
-  MovieslenReaderRAM(string filePath, int _dataSize): MovieslenReader(filePath){
+  MovieslenReaderRAM(string filename, int _dataSize): MovieslenReader(filename){
     srand(time(0));
     dataSize = _dataSize;
 
@@ -38,7 +40,7 @@ public:
     for (int i=0 ; i<dataSize ; i++){
       tuple* cur = MovieslenReader::nextTuple();
       if (cur == NULL){
-        fprintf(stderr, "ERR: There are not %d datapoints in the set.\n", dataSize);
+        fprintf(stderr, "ERR: There are %d < %d datapoints in the set.\n", i, dataSize);
         dataSize = i;
         break;
       }

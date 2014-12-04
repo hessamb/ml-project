@@ -47,79 +47,79 @@ public :
     }
     RMSE /= counter ;
     RMSE = sqrt(RMSE) ;
-	buff->reset();
+  buff->reset();
     return RMSE ;
   }
 
   void Learn (ReadInterface* buff)
-  {	
-	int ptime = time(0) ;
+  {
+  int ptime = time(0) ;
     for (int step = 0 ; step<NSTEP ; step++)
     {
       cout << "iteration :" << step << endl ;
       cout << "time : " << time(0) -ptime << endl ;
-	ptime = time(0) ;
-	tuple* rating ;
+  ptime = time(0) ;
+  tuple* rating ;
       while(( rating = buff->nextTuple() ) != NULL)
       {
-		int f =  P.n ;
-		double eij = rating->r - BU[rating->uid] - BI[rating->iid] - ave_rate;
-		for (int i=0 ; i<f ; i++)
-			eij -=   P[rating->uid][i] * Q[rating->iid][i]  ;
+    int f =  P.n ;
+    double eij = rating->r - BU[rating->uid] - BI[rating->iid] - ave_rate;
+    for (int i=0 ; i<f ; i++)
+      eij -=   P[rating->uid][i] * Q[rating->iid][i]  ;
 
         ave_rate = ave_rate + ALPHA * (2 *  eij ) ;
 
         BU[rating->uid] +=  ALPHA * ( 2 *  eij - BU[rating->uid] * LAMBDA   );
         BI[rating->iid] +=  ALPHA * ( 2 *  eij - BI[rating->iid] * LAMBDA   );
-		
-		for (int i=0 ; i<f ; i++ )
-		{
-			P[rating->uid][i] += ( Q[rating->iid][i] * (2 * eij) - P[rating->uid][i] * LAMBDA ) * ALPHA ;
-			Q[rating->iid][i] += ( P[rating->uid][i] * (2 * eij) - Q[rating->iid][i] * LAMBDA ) * ALPHA ;
-		}
-	  }
+
+    for (int i=0 ; i<f ; i++ )
+    {
+      P[rating->uid][i] += ( Q[rating->iid][i] * (2 * eij) - P[rating->uid][i] * LAMBDA ) * ALPHA ;
+      Q[rating->iid][i] += ( P[rating->uid][i] * (2 * eij) - Q[rating->iid][i] * LAMBDA ) * ALPHA ;
+    }
+    }
       buff->reset() ;
     }
-	
-	save("alaki");
-	
+
+  save("alaki");
+
   }
   void save(string foldername)
   {
-	cerr << "salam" <<endl ;
-	string pname = foldername + "/p";
-	string qname = foldername + "/q" ;
-	string ubias = foldername + "/bu" ;
-	string ibias = foldername + "/bi" ;
-	string imu = foldername + "/mu" ;
-	
-	FILE *pfile ;
-	pfile = fopen(imu.c_str(),"w+") ;
-	fprintf(pfile,"%lf",ave_rate) ;
-	fclose(pfile) ;
-	
-	P.save(pname);
-	cerr << "salam1" <<endl ; 
-	Q.save(qname);
-	cerr << "salam2" <<endl ;
-	BU.save(ubias);
-	cerr << "salam3" <<endl ;
-	BI.save(ibias);
-	cerr << "salam4" <<endl ;
-  }
-
-  void load(string foldername)
-  {
+  cerr << "salam" <<endl ;
   string pname = foldername + "/p";
   string qname = foldername + "/q" ;
   string ubias = foldername + "/bu" ;
   string ibias = foldername + "/bi" ;
+  string imu = foldername + "/mu" ;
 
-  P.load(pname);
-  Q.load(qname);
-  BU.load(ubias);
-  BI.load(ibias);
+  FILE *pfile ;
+  pfile = fopen(imu.c_str(),"w+") ;
+  fprintf(pfile,"%lf",ave_rate) ;
+  fclose(pfile) ;
+
+  P.save(pname);
+  cerr << "salam1" <<endl ;
+  Q.save(qname);
+  cerr << "salam2" <<endl ;
+  BU.save(ubias);
+  cerr << "salam3" <<endl ;
+  BI.save(ibias);
+  cerr << "salam4" <<endl ;
   }
+
+  // void load(string foldername)
+  // {
+  // string pname = foldername + "/p";
+  // string qname = foldername + "/q" ;
+  // string ubias = foldername + "/bu" ;
+  // string ibias = foldername + "/bi" ;
+  //
+  // P.load(pname);
+  // Q.load(qname);
+  // BU.load(ubias);
+  // BI.load(ibias);
+  // }
 
 };
 
