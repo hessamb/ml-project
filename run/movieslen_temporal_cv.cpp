@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "test/temporal.h"
-#include "read/movieslen.h"
+#include "../test/temporal.h"
+#include "../read/movieslen.h"
 
 int main(){
   int paramSize = 7;

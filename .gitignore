@@ -3,3 +3,8 @@ out
 params
 data/
 movies
+cv_result
+extract
+rank
+rankNaive
+measure

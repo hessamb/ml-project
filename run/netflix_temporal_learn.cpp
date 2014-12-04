@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "test/temporal.h"
-#include "read/netflix.h"
+#include "../test/temporal.h"
+#include "../read/netflix.h"
 
 int main(){
 

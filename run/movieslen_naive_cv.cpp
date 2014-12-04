@@ -1,12 +1,12 @@
-#include<iostream>
-#include "SGDMF.h"
+#include <iostream>
+#include "../learn/SGDMF.h"
 #include "../read/movieslen.h"
 #include "../conf.h"
 
 using namespace std ;
 
 int main()
-{  
+{
   int paramSize = 7;
   double lambda[] = {0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3};
 

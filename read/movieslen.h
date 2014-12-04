@@ -48,8 +48,8 @@ public:
     }
     printf("DATA LOADED INTO MAIN MEMORY\n");
     ptr = 0;
-    random_shuffle(data, data+dataSize);
-    printf("RANDOM SHUFFLED\n");
+//    random_shuffle(data, data+dataSize);
+//    printf("RANDOM SHUFFLED\n");
   }
 
   inline tuple* nextTuple(){

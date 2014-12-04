@@ -30,6 +30,7 @@ public:
     b_i(items), b_iBin(items, TEMPORAL_BINS_COUNT), q_i(items, f),
     p_u(users, f), ap_u(users, f), a_u(users), t_u(users) {
   }
+
   TemporalDynamicsParams(string directory): b_u(directory + "/b_u"),
     b_i(directory + "/b_i"), b_iBin(directory + "/b_iBin"),
     q_i(directory + "/q_i"), p_u(directory + "/p_u"),
@@ -85,10 +86,24 @@ public:
     int cnt = 0;
     ri->reset();
     while( (cur = ri->nextTuple()) != NULL ){
-      double error = cur->r - value(cur->uid, cur->iid, cur->t);
+      printf("IN WHILE LOOP\n");
+
+      double predict = value(cur->uid, cur->iid, cur->t);
+      printf("PREDICTED\n");
+      if (predict > 5){
+        cout << "PREDICTING " << predict << " VALUE WAS " << cur->r << endl;
+        predict = 5;
+      }
+      else if (predict < 1){
+        cout << "PREDICTING " << predict << " VALUE WAS " << cur->r << endl;
+        predict = 1;
+      }
+      double error = cur->r - predict;
       res += error * error;
       cnt++;
+      printf("WHILE FINISHED\n");
     }
+    printf("AFTER WHILE\n");
     if (cnt == 0)
       return 0;
     else{

@@ -42,6 +42,10 @@ public :
     while(( rating = buff->nextTuple() ) != NULL)
       {
       predict = ave_rate + BU[rating->uid] + BI[rating->iid] + P[rating->uid] * Q[rating->iid] ;
+      if (predict > 5)
+        predict = 5;
+      else if (predict < 1)
+        predict = 1;
       RMSE += pow(rating->r - predict,2);
       counter ++ ;
     }
@@ -81,7 +85,7 @@ public :
       buff->reset() ;
     }
 
-  save("alaki");
+//  save("alaki");
 
   }
   void save(string foldername)
