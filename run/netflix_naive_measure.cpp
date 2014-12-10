@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "../read/netflix.h"
-#include "../learn/temporal.h"
+#include "../learn/SGDMF.h"
 
 int main(){
   int start = time(0);
