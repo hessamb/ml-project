@@ -27,8 +27,8 @@ public:
   Vector t_u;
 
   TemporalDynamicsParams(int users, int items, int f): mu(0), b_u(users),
-    b_i(items), b_iBin(items, TEMPORAL_BINS_COUNT), q_i(items, f),
-    p_u(users, f), ap_u(users, f), a_u(users), t_u(users) {
+    b_i(items), b_iBin(items, TEMPORAL_BINS_COUNT), q_i(items, f, true),
+    p_u(users, f, true), ap_u(users, f, true), a_u(users), t_u(users) {
   }
 
   TemporalDynamicsParams(string directory): b_u(directory + "/b_u"),
@@ -86,24 +86,18 @@ public:
     int cnt = 0;
     ri->reset();
     while( (cur = ri->nextTuple()) != NULL ){
-      printf("IN WHILE LOOP\n");
 
       double predict = value(cur->uid, cur->iid, cur->t);
-      printf("PREDICTED\n");
       if (predict > 5){
-        cout << "PREDICTING " << predict << " VALUE WAS " << cur->r << endl;
         predict = 5;
       }
       else if (predict < 1){
-        cout << "PREDICTING " << predict << " VALUE WAS " << cur->r << endl;
         predict = 1;
       }
       double error = cur->r - predict;
       res += error * error;
       cnt++;
-      printf("WHILE FINISHED\n");
     }
-    printf("AFTER WHILE\n");
     if (cnt == 0)
       return 0;
     else{

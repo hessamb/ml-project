@@ -6,9 +6,9 @@ const int NETFLIX_MOVIES = 17770;
 const int NETFLIX_USERS = 480189;
 const int NETFLIX_DATASET_SIZE = 100480507;
 
-const double NETFLIX_BASIC_ETA = 0.002 ;
-double NETFLIX_BASIC_LAMBDA = 0.01 ;
-const double NETFLIX_BASIC_NSTEP = 20 ;
+const double NETFLIX_BASIC_ETA = 0.001 ;
+double NETFLIX_BASIC_LAMBDA = 0.03 ;
+const double NETFLIX_BASIC_NSTEP = 50 ;
 
 const double NETFLIX_TEMPORAL_ETA = 0.001;
 const double NETFLIX_TEMPORAL_LAMBDA = 0.01;
@@ -25,7 +25,7 @@ const double MOVIES_LEN_TEMPORAL_NSTEP = 30;
 
 
 const int TEMPORAL_BINS_COUNT = 1;
-const int TEMPORAL_RANK = 250;
+int TEMPORAL_RANK = 250;
 double TEMPORAL_DYNAMICS_BETA = 0.4;
 
 

@@ -23,19 +23,20 @@ int main()
 
       cout << "READING DATA TOOK " << (loaded - start) << " SECONDS." << endl;
 
-      TemporalDynamicsParams *params = test_temporal(mr_train,
+      TEMPORAL_RANK = rank[i];
+      TemporalDynamicsParams *params = learn_temporal(mr_train,
       MOVIES_LEN_TEMPORAL_ETA, MOVIES_LEN_TEMPORAL_LAMBDA, MOVIES_LEN_USERS,
-      MOVIES_LEN_MOVIES, MOVIES_LEN_TEMPORAL_NSTEP, false);
+      MOVIES_LEN_MOVIES, MOVIES_LEN_TEMPORAL_NSTEP);
 
       MovieslenReaderRAM *mr_test = new MovieslenReaderRAM("u" + ind + ".test",
       MOVIES_LEN_DATASET_SIZE);
 
-      rmseTrain += mf.test(mr_train);
-      rmseTest += mf.test(mr_test);
+      rmseTrain += params->rmse(mr_train);
+      rmseTest += params->rmse(mr_test);
     }
 
-    rmseTrain /= 1;
-    rmseTest /= 1;
+    rmseTrain /= 2;
+    rmseTest /= 2;
 
     cout << "FOR RANK = " << rank[i] << "; RMSE TRAIN = " << rmseTrain
     << " AND RMSE TEST = " << rmseTest << endl;
