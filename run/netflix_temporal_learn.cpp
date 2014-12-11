@@ -8,7 +8,7 @@ int main(){
 
   int start = time(0);
 
-  NetflixReaderRAM *nr = new NetflixReaderRAM(NETFLIX_MOVIES, NETFLIX_DATASET_SIZE);
+  NetflixReaderTrain *nr = new NetflixReaderTrain(NETFLIX_TRAIN_SIZE);
 
   int loaded = time(0);
 

@@ -46,7 +46,7 @@ public:
   inline virtual tuple* nextTuple(){
     int u, r, y, m, d;
     while (fscanf(file, "%d,%d,%d-%d-%d", &u, &r, &y, &m, &d) == EOF){
-      printf("FILE %d FINISHED.\n", cur_movie);
+      fprintf(stderr, "FILE %d FINISHED.\n", cur_movie);
       fclose(file);
       cur_movie++;
       if (cur_movie>movies)
@@ -82,6 +82,10 @@ public:
     }else{
       return mip[u];
     }
+  }
+
+  inline int getMovies(){
+    return movies;
   }
 };
 
@@ -138,6 +142,7 @@ public:
     movie = -1;
     nr = new NetflixReader(_movies);
     while( nr->nextTuple() != NULL );
+    nr->reset();
   }
 
   inline tuple* nextTuple(){
@@ -186,15 +191,15 @@ public:
 };
 
 
-class NetflixReaderProbe: public ReadInterface{
+class NetflixReaderNeat: public ReadInterface{
   FILE *file;
 
 public:
-  NetflixReaderProbe(){
-    file = fopen("data/netflix/neat_probe.txt", "r");
+  NetflixReaderNeat(string filename){
+    file = fopen(filename.c_str(), "r");
   }
 
-  inline tuple* nextTuple(){
+  inline virtual tuple* nextTuple(){
     int u, i, r, t;
     if (fscanf(file, "%d %d %d %d", &u, &i, &r, &t) == EOF)
       return NULL;
@@ -202,11 +207,127 @@ public:
       return new tuple(u, i, r, t);
   }
 
-  inline void reset(){
+  inline virtual void reset(){
     fseek(file, SEEK_SET, 0);
   }
 
-  };
+};
+
+
+class NetflixReaderProbe: public NetflixReaderNeat{
+public:
+  NetflixReaderProbe(): NetflixReaderNeat("data/netflix/neat_probe.txt"){
+  }
+};
+
+class NetflixReaderTrain: public NetflixReaderNeat{
+  int dataSize, ptr;
+  tuple** data;
+public:
+  NetflixReaderTrain(int _dataSize): NetflixReaderNeat("data/netflix/neat_train.txt"){
+    srand(time(0));
+    dataSize = _dataSize;
+
+    data = new tuple*[dataSize];
+    for (int i=0 ; i<dataSize ; i++){
+      tuple* cur = NetflixReaderNeat::nextTuple();
+      if (cur == NULL){
+        fprintf(stderr, "ERR: There are %d < %d datapoints in the set.\n", i, dataSize);
+        dataSize = i;
+        break;
+      }
+      data[i] = cur;
+    }
+    printf("ALL DATA READ\n");
+    ptr = 0;
+    random_shuffle(data, data+dataSize);
+    printf("RANDOM SHUFFLED\n");
+  }
+
+  inline tuple* nextTuple(){
+    if (ptr == dataSize)
+      return NULL;
+    else
+      return data[ptr++];
+  }
+
+  inline void reset(){
+    ptr = 0;
+  }
+
+  inline void shuffle(){
+    random_shuffle(data, data+dataSize);
+  }
+};
+
+
+class NetflixReaderTrainConstruct: public ReadInterface{
+  NetflixReaderProbe *nrp;
+  NetflixReader *nr;
+  tuple* probe;
+  int movie;
+  bool *mark;
+  bool finalStep;
+
+public:
+  NetflixReaderTrainConstruct(int _movies){
+    nrp = new NetflixReaderProbe();
+    nr = new NetflixReader(_movies);
+
+    mark = new bool[_movies];
+    memset(mark, 0, _movies * sizeof(bool));
+
+    while( nr->nextTuple() != NULL );
+    nr->reset();
+
+    probe = nrp->nextTuple();
+    movie = probe->iid;
+    nr->jumpToFile(movie+1);
+
+    finalStep = false;
+  }
+
+  inline tuple* nextTuple(){
+    if (finalStep){
+      tuple *cur;
+      do{
+        cur = nr->nextTuple();
+      }while(cur != NULL && mark[ cur->iid ]);
+      return cur;
+    }
+
+    tuple *cur = nr->nextTuple();
+    if (cur == NULL || cur->iid != movie){
+      if (probe == NULL){
+        nr->reset();
+        finalStep = true;
+        return nextTuple();
+      }else{
+        movie = probe->iid;
+        nr->jumpToFile(movie+1);
+        return nextTuple();
+      }
+    }else if (probe != NULL && cur->uid == probe->uid && cur->iid == probe->iid){
+      mark[ probe->iid ] = true;
+      probe = nrp->nextTuple();
+      return nextTuple();
+    }
+    return cur;
+  }
+
+  inline void reset(){
+    nr->reset();
+    nrp->reset();
+
+    probe = nrp->nextTuple();
+    movie = probe->iid;
+    nr->jumpToFile(movie+1);
+  }
+
+};
+
+
+
 
 
 #endif

@@ -28,7 +28,7 @@ public :
     ave_rate = 0 ;
   }
 
-  void configure (double lambda = NETFLIX_BASIC_LAMBDA, double alpha = NETFLIX_BASIC_ETA , double nstep = NETFLIX_BASIC_NSTEP)
+  void configure (double lambda = BASIC_LAMBDA, double alpha = BASIC_ETA , double nstep = BASIC_NSTEP)
   {
     LAMBDA = lambda ; ALPHA = alpha ; NSTEP = nstep  ;
   }
