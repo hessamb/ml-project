@@ -10,7 +10,7 @@
 #include "../read/netflix.h"
 
 inline int get_bin(int t){
-  return 0;
+  return 0; // TODO
 }
 
 class TemporalDynamicsParams{

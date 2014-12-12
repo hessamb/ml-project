@@ -26,6 +26,7 @@ public:
 
   Vector(string filename)
   {
+    cout << filename << endl;
     FILE * pFile ;
     pFile = fopen (filename.c_str(),"r");
     fscanf(pFile, " %d", &n);
