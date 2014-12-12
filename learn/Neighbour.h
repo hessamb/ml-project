@@ -1,11 +1,12 @@
-#ifndef __SGDMF__
-#define __SGDMF__
+#ifndef __Nei__
+#define __Nei__
 
 #include <iostream>
 #include "../Models/linalg.h"
 #include "../read/interface.h"
 #include "../conf.h"
 #include <ctime>
+#include "SGDMF.h"
 
 using namespace std ;
 
@@ -20,13 +21,18 @@ public :
   Matrix weight,similarity,Rating;
   Vector BU,BI ;
   double ave_rate ;
-  
+  MF *mf ;
   
   NeighborhoodModel(int mm = 0 ,int nn =0 ,int kk = 0): weight(mm,mm), similarity(mm,mm),Rating(nn,mm),BU(nn),BI(mm)
   {
+    mf = NULL ;
     m = mm ; n = nn ; k = kk ;
     LAMBDA =0 ; ALPHA = 0 ; NSTEP = 0 ;
     ave_rate = 0 ;
+  }
+  ~NeighborhoodModel()
+  {
+    delete mf ;
   }
   void ComputerSimilarity (int i , int j)
   {
@@ -53,7 +59,7 @@ public :
       {
         if(Rating[rating->uid][j] != 0 )
         {
-            temp += ( Rating[rating->uid][j] - BI[j] - BU[rating->uid] - ave_rate )*weight[rating->iid][j] ;
+            temp += ( Rating[rating->uid][j] - mf->predict(rating->uid,j) )*weight[rating->iid][j] ;
             cnt ++ ;
         }
       }
@@ -73,6 +79,7 @@ public :
   }
   void MakeRatingMatrix (ReadInterface* buff)
   {
+    tuple *rating ;
     while(( rating = buff->nextTuple() ) != NULL)
     {
       Rating[rating->uid][rating->iid] = rating->r ;
@@ -81,7 +88,16 @@ public :
   }
   void Learn (ReadInterface* buff)
   {
-  int ptime = time(0) ;
+    MakeRatingMatrix (buff) ;
+    cerr << " Rating Matrix is builded" << endl ;
+    if(mf ==NULL)
+    {
+      mf = new MF(MOVIES_LEN_MOVIES , MOVIES_LEN_USERS , k) ; 
+      mf->configure( 0.03, 0.002 , 30) ;
+      mf->Learn(buff);
+      cerr << "Basic MF is learned " << endl ;
+    }
+    int ptime = time(0) ;
     for (int step = 0 ; step<NSTEP ; step++)
     {
       cout << "iteration :" << step << endl ;
@@ -90,7 +106,7 @@ public :
       tuple* rating ;
       while(( rating = buff->nextTuple() ) != NULL)
       {
-        double errorbias = rating->r - BU[rating->uid] - BI[rating->iid] -ave_rate ;
+        //double errorbias = rating->r - BU[rating->uid] - BI[rating->iid] -ave_rate ;
         double eij = rating->r - BU[rating->uid] - BI[rating->iid] - ave_rate ;
         double temp = 0 ;
         int counter = 0 ; 
@@ -98,7 +114,7 @@ public :
           if(Rating[rating->uid][j] != 0 )
           {
             counter ++ ;
-            temp += ( Rating[rating->uid][j] - BI[j] - BU[rating->uid] - ave_rate )*weight[rating->iid][j] ;
+            temp += ( Rating[rating->uid][j] - mf->predict(rating->uid,j) )*weight[rating->iid][j] ;
           }
         temp /= sqrt(counter) ;
         eij += temp ; 
@@ -111,7 +127,7 @@ public :
         for (int j=0 ; j<m ; j++ )
         {
           if(Rating[rating->uid][j] != 0 ){
-            weight[rating->iid][j] += ALPHA * ( (1/sqrt(counter))* eij * ( Rating[rating->uid][j]- BU[rating->uid] - BI[j] -ave_rate) 
+            weight[rating->iid][j] += ALPHA * ( (1/sqrt(counter))* eij * ( Rating[rating->uid][j] - mf->predict(rating->uid,j))  
             - LAMBDA*weight[rating->iid][j] );
           }
         }
@@ -119,14 +135,14 @@ public :
       buff->reset() ;
     }
 
-//  save("alaki");
+  //save("params");
 
   }
+  
   void save(string foldername)
   {
   cerr << "salam" <<endl ;
-  string pname = foldername + "/p";
-  string qname = foldername + "/q" ;
+  string pname = foldername + "/w";
   string ubias = foldername + "/bu" ;
   string ibias = foldername + "/bi" ;
   string imu = foldername + "/mu" ;
@@ -136,15 +152,14 @@ public :
   fprintf(pfile,"%lf",ave_rate) ;
   fclose(pfile) ;
 
-  P.save(pname);
+  weight.save(pname);
   cerr << "salam1" <<endl ;
-  Q.save(qname);
-  cerr << "salam2" <<endl ;
   BU.save(ubias);
   cerr << "salam3" <<endl ;
   BI.save(ibias);
   cerr << "salam4" <<endl ;
   }
+   
 
   // void load(string foldername)
   // {

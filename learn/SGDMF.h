@@ -89,8 +89,17 @@ public :
     }
 
 //  save("alaki");
-
   }
+double predict (int uid,int iid ){
+  double predict = ave_rate + BU[uid] + BI[iid]  ;
+  if (predict > 5)
+    predict = 5;
+  else if (predict < 1)
+    predict = 1;
+  
+  return predict ;
+}
+  
   void save(string foldername)
   {
   cerr << "salam" <<endl ;
